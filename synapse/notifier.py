@@ -29,7 +29,7 @@ from synapse.logging.context import PreserveLoggingContext
 from synapse.logging.utils import log_function
 from synapse.metrics import LaterGauge
 from synapse.metrics.background_process_metrics import run_as_background_process
-from synapse.types import StreamToken
+from synapse.types import EventStreamToken, StreamToken
 from synapse.util.async_helpers import ObservableDeferred, timeout_deferred
 from synapse.util.metrics import Measure
 from synapse.visibility import filter_events_for_client
@@ -272,7 +272,10 @@ class Notifier(object):
             self._user_joined_room(event.state_key, event.room_id)
 
         self.on_new_event(
-            "room_key", room_stream_id, users=extra_users, rooms=[event.room_id]
+            "room_key",
+            EventStreamToken(room_stream_id),
+            users=extra_users,
+            rooms=[event.room_id],
         )
 
     async def _notify_app_services(self, room_stream_id):
